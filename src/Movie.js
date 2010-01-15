@@ -487,7 +487,22 @@ Gordon.require("src/Stream");
 			}else{ s.seek(length - 2); }
 			return t;
 		},
-		
+		_handleDefineButtonCxForm: function(offset,length) {
+			var t = this;
+			var s = t.stream;
+			var id = s.readUI16();
+			var d = t._dictionary;
+			var buttonId = s.readUI16();
+			var button = t._dictionary[buttonId];
+			if(!button.cxform){
+				button.cxform = new Gordon.Cxform(s.readCxform());
+			}else{ s.seek(length - 2); }
+			return t;
+		},
+		_handleProtect: function(offset,length) {
+			var t = this;
+			return t;
+		}	
 		_readAction: function(){
 			var t = this;
 			var s = t.stream;

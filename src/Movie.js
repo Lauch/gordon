@@ -502,7 +502,7 @@ Gordon.require("src/Stream");
 		_handleProtect: function(offset,length) {
 			var t = this;
 			return t;
-		}	
+		},
 		_readAction: function(){
 			var t = this;
 			var s = t.stream;

@@ -393,6 +393,9 @@ Gordon.require("src/Stream");
 			}
 			return styles;
 		},
+		_handleDefineShape2: function(offset,length) {
+			return this._handleDefineShape(offset,length);
+		}	
 		
 		_readLineStyleArray: function(){
 			var s = this.stream;
@@ -453,6 +456,30 @@ Gordon.require("src/Stream");
 			}else{ s.seek(length - 2); }
 			return t;
 		},
+		_handleDefineBitsJpeg2: function(offset, length) {
+			var t = this;
+			var s = t.stream;
+			var id = s.readUI16();
+			var d = t._dictionary;
+			if(!d[id]){
+				var img = d[id] = {
+					type: "image",
+					id: id
+				};
+				var data = s.seek(2).readString(length - 4);
+				var i = 0;
+				do{
+					var highByte = data.charCodeAt(i);
+					var lowByte = data.charCodeAt(i + 1);
+					i += 2;
+				}while(!(highByte == 0xff && (lowByte == 0xc0 || lowByte == 0xc2)));
+				// Swf8: Embedding Png and Gif89a
+				img.data = "data:image/jpeg;base64," + base64encode(data);
+				img.width = (data.charCodeAt(i + 5) << 8) | data.charCodeAt(i + 6);
+				img.height = (data.charCodeAt(i + 3) << 8) | data.charCodeAt(i + 4);
+			}else{ s.seek(length - 2); }
+			return t;
+		},	
 		
 		_handleDefineButton: function(offset, length){
 			var t = this;
